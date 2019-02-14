@@ -12,6 +12,10 @@
         {
             "type": "patch",
             "path": "gst-plugins-bad-issue-871-workaround.patch"
+        },
+        {
+            "type": "patch",
+            "path": "0001-Add-meson.build-file-for-VCD-plugin.patch"
         }
     ],
     "post-install": [

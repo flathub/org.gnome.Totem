@@ -1,0 +1,31 @@
+From 88b1f69bc56769a0cd3245c7ffa061b3c7cccf0c Mon Sep 17 00:00:00 2001
+From: Bastien Nocera <hadess@hadess.net>
+Date: Thu, 14 Feb 2019 18:11:43 +0100
+Subject: [PATCH] Add meson.build file for VCD plugin
+
+---
+ sys/vcd/meson.build | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+ create mode 100644 sys/vcd/meson.build
+
+diff --git a/sys/vcd/meson.build b/sys/vcd/meson.build
+new file mode 100644
+index 000000000..4d76d9e99
+--- /dev/null
++++ b/sys/vcd/meson.build
+@@ -0,0 +1,12 @@
++if cc.has_header ('linux/cdrom.h')
++  gstvcd = library('gstvcdsrc', 'vcdsrc.c',
++    c_args: gst_plugins_bad_args,
++    include_directories: [configinc],
++    dependencies : [gstbase_dep],
++    install: true,
++    install_dir: plugins_install_dir
++  )
++  pkgconfig.generate(gstvcd, install_dir: plugins_pkgconfig_install_dir)
++elif get_option('vcd').enabled()
++  error('vcd plugin enabled but linux/cdrom.h not found')
++endif
+-- 
+2.20.1
+
