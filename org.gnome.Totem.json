@@ -280,8 +280,8 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/gnome-desktop.git",
-                    "commit": "ea41116fa3a4be14526b0b8f495fe028dda9da14",
-                    "tag": "3.33.92.1"
+                    "commit": "8154dd2e0dd3eb84c6802a3836447bd0d9aa7fe6",
+                    "tag": "3.36.1"
                 }
             ]
         },
