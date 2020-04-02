@@ -190,8 +190,8 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/tracker.git",
-                    "commit": "f56ccfde3b0a63375d6a4a664928b348c9ea45eb",
-                    "tag": "2.3.0"
+                    "commit": "1fab9a0bf547cc2d12b743b53f0df8423d36e83d",
+                    "tag": "2.3.4"
                 }
             ]
         },
