@@ -11,8 +11,8 @@
         {
             "type": "git",
             "url": "https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad.git",
-            "tag": "1.16.3",
-            "commit": "ee8144e98b084d75ffabaef0ef3dca2af8d72061"
+            "tag": "1.18.2",
+            "commit": "b375ee4cdbcb98687c226d6564f8678a809cf02a"
         }
     ],
     "post-install": [
