@@ -1,12 +1,13 @@
 {
     "name": "dleyna-server",
-    "config-opts": [ "--with-dleyna-service-name=org.gnome.Totem.dleyna-server" ],
+    "buildsystem": "meson",
+    "config-opts": [ "-Dserver_name=org.gnome.Totem.dleyna-server" ],
     "sources": [
         {
             "type": "git",
-            "url": "https://github.com/hadess/dleyna-server.git",
-            "commit": "fe3caa88097def0eab675aff8a437ad10a0bab7f",
-            "branch": "wip/hadess/dleyna-service-name"
+            "url": "https://github.com/phako/dleyna-server.git",
+            "commit": "c8b7ae8a71b506ff37ed65fe0597a78dfe019465",
+            "tag": "v0.7.0"
         }
     ]
 }
