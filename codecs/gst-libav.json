@@ -8,8 +8,8 @@
         {
             "type": "git",
             "url": "https://gitlab.freedesktop.org/gstreamer/gst-libav.git",
-            "tag": "1.16.3",
-            "commit": "6988bdb0482b18b7a9f0c9635217a93d5057a9ff"
+            "tag": "1.18.2",
+            "commit": "20352236c2c22cd4b48d30c4218218e22e07ef77"
         },
         {
             "type": "patch",
