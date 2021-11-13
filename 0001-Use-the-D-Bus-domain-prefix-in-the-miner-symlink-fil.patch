@@ -1,0 +1,51 @@
+From a586ea894e95d512c705138234f70b814539c0f5 Mon Sep 17 00:00:00 2001
+From: Ryan Gonzalez <ryan.gonzalez@collabora.com>
+Date: Fri, 12 Nov 2021 19:01:39 -0600
+Subject: [PATCH] Use the D-Bus domain prefix in the miner symlink filenames
+
+51eb9e8831fa07aa9590468b65d3888d5ab66df2 added support for using a
+custom D-Bus domain prefix, but the miner symlinks would always be
+created pointing to the original names, leaving them broken.
+
+Signed-off-by: Ryan Gonzalez <ryan.gonzalez@collabora.com>
+---
+ src/create-miner-symlinks.sh | 9 +++++----
+ src/meson.build              | 2 +-
+ 2 files changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/src/create-miner-symlinks.sh b/src/create-miner-symlinks.sh
+index 77a085815..4d336d920 100644
+--- a/src/create-miner-symlinks.sh
++++ b/src/create-miner-symlinks.sh
+@@ -8,13 +8,14 @@ set -e
+ 
+ dbus_services_dir="$1"
+ tracker_miner_services_dir="$2"
+-have_tracker_miner_fs="$3"
+-have_tracker_miner_rss="$4"
++domain_prefix="$3"
++have_tracker_miner_fs="$4"
++have_tracker_miner_rss="$5"
+ 
+ mkdir -p ${DESTDIR}/${tracker_miner_services_dir}
+ if ([ "$have_tracker_miner_fs" = "true" ]); then
+-  ln -sf "${dbus_services_dir}/org.freedesktop.Tracker3.Miner.Files.service" "${DESTDIR}/${tracker_miner_services_dir}/"
++  ln -sf "${dbus_services_dir}/${domain_prefix}.Tracker3.Miner.Files.service" "${DESTDIR}/${tracker_miner_services_dir}/"
+ fi
+ if ([ "$have_tracker_miner_rss" = "true" ]); then
+-  ln -sf "${dbus_services_dir}/org.freedesktop.Tracker3.Miner.RSS.service" "${DESTDIR}/${tracker_miner_services_dir}/"
++  ln -sf "${dbus_services_dir}/${domain_prefix}.Tracker3.Miner.RSS.service" "${DESTDIR}/${tracker_miner_services_dir}/"
+ fi
+diff --git a/src/meson.build b/src/meson.build
+index a54f1c669..3d5567eb8 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -22,4 +22,4 @@ endif
+ # CLI subcommands
+ subdir('tracker')
+ 
+-meson.add_install_script('create-miner-symlinks.sh', dbus_services_dir, tracker_miner_services_dir, have_tracker_miner_fs.to_string(), have_tracker_miner_rss.to_string())
++meson.add_install_script('create-miner-symlinks.sh', dbus_services_dir, tracker_miner_services_dir, get_option('domain_prefix'), have_tracker_miner_fs.to_string(), have_tracker_miner_rss.to_string())
+-- 
+2.32.0
+

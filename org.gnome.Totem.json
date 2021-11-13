@@ -220,6 +220,10 @@
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/tracker-miners.git",
                     "commit": "191cc5218b53fba85baec1c8c17bb246a74044c0"
+                },
+                {
+                    "type": "patch",
+                    "path": "0001-Use-the-D-Bus-domain-prefix-in-the-miner-symlink-fil.patch"
                 }
             ]
         },
