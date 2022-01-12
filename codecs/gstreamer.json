@@ -13,10 +13,12 @@
         "-Dexamples=disabled",
         "-Ddoc=disabled",
         "-Dgtk_doc=disabled",
-        "-Dopenh264=disabled",
-        "-Dvdpau=disabled",
-        "-Dvulkan=disabled",
-        "-Dmpeg2dec=enabled"
+        "-Dgpl=enabled",
+        "-Dbad=enabled",
+        "-Dgst-plugins-bad:openh264=disabled",
+        "-Dgst-plugins-bad:vulkan=disabled",
+        "-Dugly=enabled",
+        "-Dgst-plugins-ugly:mpeg2dec=enabled"
     ],
     "cleanup": [ "/bin/*webrtc*", "/bin/crossfade", "/bin/tsparser", "/bin/playout", "/lib/gstreamer-1.0/include/" ],
     "sources": [
@@ -24,7 +26,8 @@
             "type": "git",
             "disable-submodules": true,
             "url": "https://gitlab.freedesktop.org/gstreamer/gstreamer.git",
-            "commit": "b8d6962c9b9d369ec9eca540e270c617b5086332"
+            "tag": "1.19.3",
+            "commit": "f513c289b0ef48a13aa0b80ba65a0c76c2a77cd2"
         },
         {
             "type": "patch",
