@@ -197,7 +197,8 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/tracker.git",
-                    "tag": "3.2.1"
+                    "branch": "tracker-3.2",
+                    "commit": "bacc2d4172f5fd3791a47f563e336fd48c6ef51e"
                 }
             ]
         },
