@@ -371,8 +371,7 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/totem.git",
-                    "branch": "gnome-3-38",
-                    "commit": "db5303aa521ba3a68385597b357109d19c0d7369"
+                    "commit": "d578333de76dc51f7a58bd84edee8ee93f5050e3"
                 }
             ]
         }
