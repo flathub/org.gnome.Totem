@@ -16,6 +16,7 @@
         "-Dgpl=enabled",
         "-Dlibav=enabled",
         "-Dbad=enabled",
+        "-Dvaapi=enabled",
         "-Dgst-plugins-bad:openh264=disabled",
         "-Dgst-plugins-bad:vulkan=disabled",
         "-Dugly=enabled",

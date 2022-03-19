@@ -197,7 +197,8 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/tracker.git",
-                    "tag": "3.2.1"
+                    "branch": "tracker-3.2",
+                    "commit": "bacc2d4172f5fd3791a47f563e336fd48c6ef51e"
                 }
             ]
         },
@@ -331,18 +332,20 @@
                 }
             ]
         },
-        "shared-modules/dbus-glib/dbus-glib-0.110.json",
         {
-            "name": "python3-dbus-python",
-            "buildsystem": "simple",
-            "build-commands": [
-                "pip3 install --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} dbus-python"
+            "name" : "libhandy",
+            "buildsystem" : "meson",
+            "config-opts" : [
+                "-Dexamples=false",
+                "-Dglade_catalog=disabled",
+                "-Dtests=false"
             ],
-            "sources": [
+            "sources" : [
                 {
-                    "type": "file",
-                    "url": "https://dbus.freedesktop.org/releases/dbus-python/dbus-python-1.2.16.tar.gz",
-                    "sha256": "11238f1d86c995d8aed2e22f04a1e3779f0d70e587caffeab4857f3c662ed5a4"
+                    "type": "git",
+                    "url": "https://gitlab.gnome.org/GNOME/libhandy",
+                    "commit": "8fa8306a79215fc6ebf2483145da98bf9b2495ab",
+                    "tag": "1.5.0"
                 }
             ]
         },
@@ -354,8 +357,7 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/totem.git",
-                    "branch": "gnome-3-38",
-                    "commit": "db5303aa521ba3a68385597b357109d19c0d7369"
+                    "commit": "d578333de76dc51f7a58bd84edee8ee93f5050e3"
                 }
             ]
         }
