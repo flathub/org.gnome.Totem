@@ -41,6 +41,10 @@
             "path": "gst-libav-stop-caching-codecs.patch"
         },
         {
+            "type": "patch",
+            "path": "0001-gtk-Fix-double-free-when-OpenGL-can-t-be-initialised.patch"
+        },
+        {
             "type": "file",
             "path": "move-gst-plugins.sh"
         }
