@@ -1,0 +1,86 @@
+From 657dcb47a96f7221915d5f7ea7701cb0e3d3a69d Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?V=C3=ADctor=20Manuel=20J=C3=A1quez=20Leal?=
+ <vjaquez@igalia.com>
+Date: Thu, 11 Aug 2022 21:22:12 +0200
+Subject: [PATCH] plugin: Handle when no encoders/decoders available.
+
+Nouveau driver currently only exposes postproc entry. But
+vaapidecodebin is registered independent if there are decoders or not,
+exposing a segmentation fault.
+
+This patch removes the encoder/decoder/codec arrays if no entries are
+found, and if no decoders are found vaapidecodebin is not
+registered. Also for vaapipostproc if no postproc entry is found.
+
+Also, if general decoder, used by vaapidecodebin, doesn't have a sink
+pad string, don't register the glib type.
+
+Fixes: #1349
+---
+ .../gst-libs/gst/vaapi/gstvaapidisplay.c             |  7 +++++++
+ subprojects/gstreamer-vaapi/gst/vaapi/gstvaapi.c     | 12 ++++++------
+ .../gstreamer-vaapi/gst/vaapi/gstvaapidecode.c       |  2 ++
+ 3 files changed, 15 insertions(+), 6 deletions(-)
+
+diff --git a/subprojects/gstreamer-vaapi/gst-libs/gst/vaapi/gstvaapidisplay.c b/subprojects/gstreamer-vaapi/gst-libs/gst/vaapi/gstvaapidisplay.c
+index 878761af83f..5bf4b137862 100644
+--- a/subprojects/gstreamer-vaapi/gst-libs/gst/vaapi/gstvaapidisplay.c
++++ b/subprojects/gstreamer-vaapi/gst-libs/gst/vaapi/gstvaapidisplay.c
+@@ -557,6 +557,13 @@ ensure_profiles (GstVaapiDisplay * display)
+   }
+   success = TRUE;
+ 
++  if (priv->encoders->len == 0)
++    g_clear_pointer (&priv->encoders, g_ptr_array_unref);
++  if (priv->decoders->len == 0)
++    g_clear_pointer (&priv->decoders, g_ptr_array_unref);
++  if (priv->codecs->len == 0)
++    g_clear_pointer (&priv->codecs, g_array_unref);
++
+ cleanup:
+   g_free (profiles);
+   g_free (entrypoints);
+diff --git a/subprojects/gstreamer-vaapi/gst/vaapi/gstvaapi.c b/subprojects/gstreamer-vaapi/gst/vaapi/gstvaapi.c
+index 35326248390..c45fd0afa90 100644
+--- a/subprojects/gstreamer-vaapi/gst/vaapi/gstvaapi.c
++++ b/subprojects/gstreamer-vaapi/gst/vaapi/gstvaapi.c
+@@ -200,17 +200,17 @@ plugin_init (GstPlugin * plugin)
+   decoders = display_get_decoder_codecs (display);
+   if (decoders) {
+     gst_vaapidecode_register (plugin, decoders);
++    gst_element_register (plugin, "vaapidecodebin",
++        GST_RANK_PRIMARY + 2, GST_TYPE_VAAPI_DECODE_BIN);
+     g_array_unref (decoders);
+   }
+ 
+-  if (_gst_vaapi_has_video_processing)
++  if (_gst_vaapi_has_video_processing) {
+     gst_vaapioverlay_register (plugin, display);
+ 
+-  gst_element_register (plugin, "vaapipostproc",
+-      GST_RANK_NONE, GST_TYPE_VAAPIPOSTPROC);
+-
+-  gst_element_register (plugin, "vaapidecodebin",
+-      GST_RANK_PRIMARY + 2, GST_TYPE_VAAPI_DECODE_BIN);
++    gst_element_register (plugin, "vaapipostproc",
++        GST_RANK_NONE, GST_TYPE_VAAPIPOSTPROC);
++  }
+ 
+   rank = GST_RANK_SECONDARY;
+   if (g_getenv ("WAYLAND_DISPLAY"))
+diff --git a/subprojects/gstreamer-vaapi/gst/vaapi/gstvaapidecode.c b/subprojects/gstreamer-vaapi/gst/vaapi/gstvaapidecode.c
+index 2ce31d99303..578e68bdf18 100644
+--- a/subprojects/gstreamer-vaapi/gst/vaapi/gstvaapidecode.c
++++ b/subprojects/gstreamer-vaapi/gst/vaapi/gstvaapidecode.c
+@@ -1614,6 +1614,8 @@ gst_vaapidecode_register (GstPlugin * plugin, GArray * decoders)
+       sink_caps_str = g_strconcat (gst_vaapidecode_sink_caps_str, "; ",
+           vaapi_decode_map[i].caps_str, NULL);
+       g_clear_pointer (&gst_vaapidecode_sink_caps_str, g_free);
++      if (!sink_caps_str)
++        break;
+       gst_vaapidecode_sink_caps_str = sink_caps_str;
+     }
+ 
+-- 
+GitLab
+
