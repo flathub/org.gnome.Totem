@@ -1,0 +1,16 @@
+{
+    "name": "dleyna",
+    "buildsystem": "meson",
+    "config-opts": [
+        "-Dserver_name=org.gnome.Totem.dleyna-server",
+        "-Dconnector=true",
+        "-Dserver=true"
+    ],
+    "sources": [
+        {
+            "type": "git",
+            "url": "https://gitlab.gnome.org/World/dLeyna.git",
+            "commit": "54bdd46d08fbdf327a38ef31a00a0921e8de8124"
+        }
+    ]
+}
