@@ -126,13 +126,14 @@
         },
         {
             "name": "librest",
-            "config-opts": [ "--disable-gtk-doc" ],
+            "buildsystem": "meson",
+            "config-opts": [ "-Dgtk_doc=false" ],
             "sources": [
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/librest.git",
-                    "commit": "bd33ade80080687e49b87329bf587e966b859bbb",
-                    "tag": "0.8.1"
+                    "commit": "aa9e968e381ede159414c6338da24d61ad0b5d8b",
+                    "tag": "0.9.1"
                 }
             ]
         },
