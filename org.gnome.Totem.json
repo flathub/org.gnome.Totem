@@ -109,12 +109,17 @@
         {
             "name": "grilo",
             "buildsystem": "meson",
-            "config-opts": [ "-Denable-gtk-doc=false", "-Denable-grl-net=true", "-Denable-grl-pls=true" ],
+            "config-opts": [
+                "-Denable-gtk-doc=false",
+                "-Denable-grl-net=true",
+                "-Denable-grl-pls=true",
+                "-Dsoup3=false"
+            ],
             "sources": [
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/grilo.git",
-                    "commit": "3f971c40137c18f364580ef640e054254fd011ca"
+                    "commit": "c80ca32b214a3c91ea1aed552d1a3b538c4b58c5"
                 }
             ],
             "cleanup": [ "/include" ]
@@ -297,8 +302,7 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/grilo-plugins.git",
-                    "commit": "9d2afa38e13ff0ea5ddbc32a32900a3f2f496dc5",
-                    "tag": "grilo-plugins-0.3.14"
+                    "commit": "a62b7e2a564a4e93f374abb9c4bffe3346dcb4e5"
                 }
             ],
             "cleanup": [ "/include" ]
