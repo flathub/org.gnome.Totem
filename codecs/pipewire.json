@@ -19,13 +19,15 @@
         "-Dbluez5-codec-ldac=disabled",
         "-Dbluez5-codec-aptx=disabled",
         "-Dlibcamera=disabled",
+        "-Dsession-managers=[]",
         "-Dudevrulesdir=/tmp/lib/udev/rules.d"
     ],
     "sources": [
         {
             "type": "git",
             "url": "https://gitlab.freedesktop.org/pipewire/pipewire.git",
-            "commit": "f8817b439433798bd7217dc4ae72197887b0fc96"
+            "tag": "0.3.58",
+            "commit": "64a3edf89ec07957107dff984f053f41ded443fe"
         }
     ]
 }
