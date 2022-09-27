@@ -5,8 +5,8 @@
         {
             "type": "git",
             "url": "https://gitlab.gnome.org/GNOME/gssdp.git",
-            "commit": "22f2bb1cf8ff32a20144b1cbfc8ee521b1ac5a57",
-            "tag": "gssdp-1.5.1"
+            "commit": "6eeaf27aec6ff11f325ff633b52bd56dbc1435aa",
+            "tag": "gssdp-1.6.0"
         }
     ]
 }
