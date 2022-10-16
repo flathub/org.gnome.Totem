@@ -27,7 +27,7 @@
         /* Access DVDs */
         "--filesystem=/run/media",
         /* Browse gvfs */
-        "--talk-name=org.gtk.vfs", "--talk-name=org.gtk.vfs.*",
+        "--talk-name=org.gtk.vfs.*",
         "--filesystem=xdg-run/gvfs", "--filesystem=xdg-run/gvfsd",
         /* Migrate DConf settings from the host */
         "--metadata=X-DConf=migrate-path=/org/gnome/Totem/",
