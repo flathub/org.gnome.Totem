@@ -33,16 +33,12 @@
             "type": "git",
             "disable-submodules": true,
             "url": "https://gitlab.freedesktop.org/gstreamer/gstreamer.git",
-            "tag": "1.20.3",
-            "commit": "ccf22e315cedf81e0075ab179ffb1b733da5206e"
+            "tag": "1.20.4",
+            "commit": "642730bd67d3c23ac68bd328fbddd191a7a43f25"
         },
         {
             "type": "patch",
             "path": "gst-libav-stop-caching-codecs.patch"
-        },
-        {
-            "type": "patch",
-            "path": "657dcb47a96f7221915d5f7ea7701cb0e3d3a69d.patch"
         },
         {
             "type": "file",
