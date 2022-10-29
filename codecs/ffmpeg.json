@@ -1,13 +1,14 @@
 {
     "name": "ffmpeg",
+    "build-options": {
+        "prefix": "/app/lib/codecs/"
+    },
     "cleanup": [
       "/lib/codecs/share/ffmpeg/examples",
       "/lib/codecs/lib/pkgconfig",
       "/lib/codecs/include"
     ],
     "config-opts": [
-        "--prefix=/app/lib/codecs/",
-        "--libdir=/app/lib/codecs/lib",
         "--disable-debug",
         "--disable-doc",
         "--disable-static",
