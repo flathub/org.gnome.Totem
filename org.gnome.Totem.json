@@ -201,8 +201,7 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/tracker.git",
-                    "branch": "tracker-3.2",
-                    "commit": "bacc2d4172f5fd3791a47f563e336fd48c6ef51e"
+                    "tag": "3.4.1"
                 }
             ]
         },
@@ -225,7 +224,7 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/tracker-miners.git",
-                    "tag": "3.2.1"
+                    "tag": "3.4.1"
                 }
             ]
         },
