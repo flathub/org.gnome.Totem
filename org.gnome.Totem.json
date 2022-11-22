@@ -1,7 +1,7 @@
 {
     "app-id": "org.gnome.Totem",
     "runtime": "org.gnome.Platform",
-    "runtime-version": "42",
+    "runtime-version": "43",
     "sdk": "org.gnome.Sdk",
     "command": "totem",
     "finish-args": [
@@ -27,7 +27,7 @@
         /* Access DVDs */
         "--filesystem=/run/media",
         /* Browse gvfs */
-        "--talk-name=org.gtk.vfs", "--talk-name=org.gtk.vfs.*",
+        "--talk-name=org.gtk.vfs.*",
         "--filesystem=xdg-run/gvfs", "--filesystem=xdg-run/gvfsd",
         /* Migrate DConf settings from the host */
         "--metadata=X-DConf=migrate-path=/org/gnome/Totem/",
@@ -109,25 +109,31 @@
         {
             "name": "grilo",
             "buildsystem": "meson",
-            "config-opts": [ "-Denable-gtk-doc=false", "-Denable-grl-net=true", "-Denable-grl-pls=true" ],
+            "config-opts": [
+                "-Denable-gtk-doc=false",
+                "-Denable-grl-net=true",
+                "-Denable-grl-pls=true",
+                "-Dsoup3=false"
+            ],
             "sources": [
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/grilo.git",
-                    "commit": "3f971c40137c18f364580ef640e054254fd011ca"
+                    "commit": "c80ca32b214a3c91ea1aed552d1a3b538c4b58c5"
                 }
             ],
             "cleanup": [ "/include" ]
         },
         {
             "name": "librest",
-            "config-opts": [ "--disable-gtk-doc" ],
+            "buildsystem": "meson",
+            "config-opts": [ "-Dgtk_doc=false" ],
             "sources": [
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/librest.git",
-                    "commit": "bd33ade80080687e49b87329bf587e966b859bbb",
-                    "tag": "0.8.1"
+                    "commit": "aa9e968e381ede159414c6338da24d61ad0b5d8b",
+                    "tag": "0.9.1"
                 }
             ]
         },
@@ -195,8 +201,7 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/tracker.git",
-                    "branch": "tracker-3.2",
-                    "commit": "bacc2d4172f5fd3791a47f563e336fd48c6ef51e"
+                    "tag": "3.4.1"
                 }
             ]
         },
@@ -219,7 +224,7 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/tracker-miners.git",
-                    "tag": "3.2.1"
+                    "tag": "3.4.1"
                 }
             ]
         },
@@ -297,8 +302,7 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/grilo-plugins.git",
-                    "commit": "9d2afa38e13ff0ea5ddbc32a32900a3f2f496dc5",
-                    "tag": "grilo-plugins-0.3.14"
+                    "commit": "a62b7e2a564a4e93f374abb9c4bffe3346dcb4e5"
                 }
             ],
             "cleanup": [ "/include" ]
@@ -323,8 +327,8 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/gnome-desktop.git",
-                    "commit": "c3e756b28ddfeda0fa061d51cb11e47e09791770",
-                    "tag": "42.0"
+                    "commit": "b6112c345181d8e1509c443f97b4f8b7bcc61725",
+                    "tag": "43"
                 }
             ]
         },
@@ -336,7 +340,7 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/totem.git",
-                    "commit": "3897bea3ca1a9e6a4eb102c82f6659860f011523"
+                    "commit": "7e62ad9d62ae36f6a1f8e616707cf827c0e83fd7"
                 }
             ]
         }
