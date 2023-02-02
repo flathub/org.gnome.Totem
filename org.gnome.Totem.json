@@ -68,7 +68,7 @@
     },
     "cleanup": [ "/include", "/share/bash-completion", "/share/doc", "/lib/*.la" ],
     "modules": [
-        "shared-modules/lua5.3/lua-5.3.5.json",
+        "shared-modules/lua5.4/lua-5.4.json",
         "codecs/liba52.json",
         "codecs/libmpeg2.json",
         "codecs/libdvdcss.json",
@@ -302,7 +302,7 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/grilo-plugins.git",
-                    "commit": "a62b7e2a564a4e93f374abb9c4bffe3346dcb4e5"
+                    "commit": "b1a36383f63a895a505ca411d364d5e263bea013"
                 }
             ],
             "cleanup": [ "/include" ]
