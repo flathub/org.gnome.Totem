@@ -1,12 +1,18 @@
 {
     "name": "gupnp",
     "buildsystem": "meson",
+    "config-opts": [
+        "-Dintrospection=false",
+        "-Dvapi=false",
+        "-Dgtk_doc=false",
+        "-Dexamples=false"
+    ],
     "sources": [
         {
             "type": "git",
             "url": "https://gitlab.gnome.org/GNOME/gupnp.git",
-            "commit": "f05648e240c99be32911fb0c6de84e5954470e56",
-            "tag": "gupnp-1.6.0"
+            "commit": "b6a70d48f7835fc7e91c1afbf0a761fabcaf8df9",
+            "tag": "gupnp-1.6.4"
         }
     ]
 }
