@@ -34,8 +34,7 @@
             "type": "git",
             "disable-submodules": true,
             "url": "https://gitlab.freedesktop.org/gstreamer/gstreamer.git",
-            "branch": "1.22",
-            "commit": "1e7c085791dc60dbeb4872117a0366cbf95deb39"
+            "commit": "a1d2cea9135d6a2fa3f6ec2c8eb9ceaa8d74b093"
         },
         {
             "type": "patch",
