@@ -121,7 +121,7 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/grilo.git",
-                    "commit": "c80ca32b214a3c91ea1aed552d1a3b538c4b58c5"
+                    "tag": "grilo-0.3.16"
                 }
             ],
             "cleanup": [ "/include" ]
@@ -147,8 +147,8 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/gnome-online-accounts.git",
-                    "commit": "a0931a8253e09e18768270f97b5e093e9df82fa8",
-                    "tag": "3.36.0"
+                    "commit": "ebab108d4d8505b56cc313acad341520ed18df8f",
+                    "tag": "3.48.0"
                 }
             ]
         },
@@ -172,8 +172,8 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/libgdata.git",
-                    "commit": "6fd85102e7dcf7414000264a263465ba5cb894e4",
-                    "tag": "0.17.12"
+                    "commit": "eb7db048e5445ad567817dced344c47a20c6ea6b",
+                    "tag": "0.18.1"
                 }
             ]
         },
@@ -305,7 +305,7 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/grilo-plugins.git",
-                    "commit": "b1a36383f63a895a505ca411d364d5e263bea013"
+                    "tag": "grilo-plugins-0.3.16"
                 }
             ],
             "cleanup": [ "/include" ]
@@ -317,7 +317,7 @@
                 {
                     "type": "git",
                     "url": "https://github.com/flatpak/flatpak-xdg-utils.git",
-                    "tag": "1.0.4"
+                    "tag": "1.0.5"
                 }
             ]
         },
@@ -330,8 +330,8 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/gnome-desktop.git",
-                    "commit": "b6112c345181d8e1509c443f97b4f8b7bcc61725",
-                    "tag": "43"
+                    "commit": "97c0344b3ba955bb6f6fe74ca03cc399a81acaa5",
+                    "tag": "44.0"
                 }
             ]
         },
