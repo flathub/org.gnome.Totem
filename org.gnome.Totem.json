@@ -69,6 +69,7 @@
     "cleanup": [ "/include", "/share/bash-completion", "/share/doc", "/lib/*.la" ],
     "modules": [
         "shared-modules/lua5.4/lua-5.4.json",
+        "shared-modules/libsoup/libsoup-2.4.json",
         "codecs/liba52.json",
         "codecs/libmpeg2.json",
         "codecs/libdvdcss.json",
