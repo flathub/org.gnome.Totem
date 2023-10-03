@@ -235,13 +235,13 @@
             "name": "libmediaart",
             "cleanup": [ "/bin", "/etc", "/libexec" ],
             "buildsystem": "meson",
-            "config-opts": [ "-Dimage_library=gdk-pixbuf", "-Dwith-docs=no" ],
+            "config-opts": [ "-Dimage_library=gdk-pixbuf" ],
             "sources": [
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/libmediaart.git",
-                    "commit": "b14a5ce2dff52201aaed869fec03af49534c6475",
-                    "tag": "1.9.4"
+                    "commit": "69b4176bccb8032180fd8d48bb8b035c60acd203",
+                    "tag": "1.9.6"
                 }
             ]
         },
