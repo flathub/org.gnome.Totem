@@ -203,7 +203,7 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/tracker.git",
-                    "tag": "3.4.1"
+                    "tag": "3.6.0"
                 }
             ]
         },
