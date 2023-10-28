@@ -197,13 +197,14 @@
             "config-opts" : [
                 "-Ddocs=false",
                 "-Dman=false",
+                "-Dsoup=soup2",
                 "-Dsystemd_user_services=false"
             ],
             "sources": [
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/tracker.git",
-                    "tag": "3.6.0"
+                    "tag": "3.7.0"
                 }
             ]
         },
