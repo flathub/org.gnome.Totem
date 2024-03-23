@@ -1,12 +1,17 @@
 {
     "name": "gssdp",
     "buildsystem": "meson",
+    "config-opts" : [
+        "-Dexamples=false",
+        "-Dmanpages=false",
+        "-Dgtk_doc=false"
+    ],
     "sources": [
         {
             "type": "git",
             "url": "https://gitlab.gnome.org/GNOME/gssdp.git",
-            "commit": "6eeaf27aec6ff11f325ff633b52bd56dbc1435aa",
-            "tag": "gssdp-1.6.0"
+            "commit": "c2d417d6a79f03c095e5730efd60015eb3109a82",
+            "tag": "gssdp-1.6.2"
         }
     ]
 }
