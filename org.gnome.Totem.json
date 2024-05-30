@@ -1,7 +1,7 @@
 {
     "app-id": "org.gnome.Totem",
     "runtime": "org.gnome.Platform",
-    "runtime-version": "43",
+    "runtime-version": "47",
     "sdk": "org.gnome.Sdk",
     "command": "totem",
     "finish-args": [
@@ -69,6 +69,7 @@
     "cleanup": [ "/include", "/share/bash-completion", "/share/doc", "/lib/*.la" ],
     "modules": [
         "shared-modules/lua5.4/lua-5.4.json",
+        "shared-modules/libsoup/libsoup-2.4.json",
         "codecs/liba52.json",
         "codecs/libmpeg2.json",
         "codecs/libdvdcss.json",
@@ -81,12 +82,13 @@
         {
             "name": "libpeas",
             "buildsystem": "meson",
+            "config-opts": [ "-Dlua51=false" ],
             "sources": [
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/libpeas.git",
-                    "commit": "6b4217e0a5ec451cdbe9380df26d701d8e6bdf88",
-                    "tag": "libpeas-1.26.0"
+                    "commit": "7f245fa5158204621c3469756a951b68a651c4fe",
+                    "tag": "libpeas-1.36.0"
                 }
             ]
         },
@@ -119,7 +121,7 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/grilo.git",
-                    "commit": "c80ca32b214a3c91ea1aed552d1a3b538c4b58c5"
+                    "tag": "grilo-0.3.16"
                 }
             ],
             "cleanup": [ "/include" ]
@@ -145,8 +147,8 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/gnome-online-accounts.git",
-                    "commit": "a0931a8253e09e18768270f97b5e093e9df82fa8",
-                    "tag": "3.36.0"
+                    "commit": "05a2dc771e6645cb60ff3a9352af91e9572ce976",
+                    "tag": "3.50.0"
                 }
             ]
         },
@@ -170,8 +172,8 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/libgdata.git",
-                    "commit": "6fd85102e7dcf7414000264a263465ba5cb894e4",
-                    "tag": "0.17.12"
+                    "commit": "eb7db048e5445ad567817dced344c47a20c6ea6b",
+                    "tag": "0.18.1"
                 }
             ]
         },
@@ -183,8 +185,8 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/gom.git",
-                    "commit": "26816b74a29b9d2d8dc169ed2f9649a4a159bc7c",
-                    "tag": "0.4"
+                    "commit": "de52f4fe1d317258f9c8f386d9ab82f03ac3a4fb",
+                    "tag": "0.5.0"
                 }
             ]
         },
@@ -195,13 +197,14 @@
             "config-opts" : [
                 "-Ddocs=false",
                 "-Dman=false",
+                "-Dsoup=soup2",
                 "-Dsystemd_user_services=false"
             ],
             "sources": [
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/tracker.git",
-                    "tag": "3.4.1"
+                    "tag": "3.7.0"
                 }
             ]
         },
@@ -215,6 +218,8 @@
                 "-Dminer_rss=false",
                 "-Dsystemd_user_services=false",
                 "-Dwriteback=false",
+                "-Dbattery_detection=none",
+                "-Dlandlock=disabled",
                 "-Ddomain_prefix=org.gnome.Totem",
                 "-Dminer_fs_cache_location=$XDG_CACHE_HOME/totem/miner/files",
                 "-Ddefault_index_recursive_dirs=['&VIDEOS']",
@@ -224,7 +229,7 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/tracker-miners.git",
-                    "tag": "3.4.1"
+                    "tag": "3.7.0"
                 }
             ]
         },
@@ -232,13 +237,13 @@
             "name": "libmediaart",
             "cleanup": [ "/bin", "/etc", "/libexec" ],
             "buildsystem": "meson",
-            "config-opts": [ "-Dimage_library=gdk-pixbuf", "-Dwith-docs=no" ],
+            "config-opts": [ "-Dimage_library=gdk-pixbuf" ],
             "sources": [
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/libmediaart.git",
-                    "commit": "b14a5ce2dff52201aaed869fec03af49534c6475",
-                    "tag": "1.9.4"
+                    "commit": "69b4176bccb8032180fd8d48bb8b035c60acd203",
+                    "tag": "1.9.6"
                 }
             ]
         },
@@ -302,7 +307,7 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/grilo-plugins.git",
-                    "commit": "b1a36383f63a895a505ca411d364d5e263bea013"
+                    "tag": "grilo-plugins-0.3.16"
                 }
             ],
             "cleanup": [ "/include" ]
@@ -314,7 +319,7 @@
                 {
                     "type": "git",
                     "url": "https://github.com/flatpak/flatpak-xdg-utils.git",
-                    "tag": "1.0.4"
+                    "tag": "1.0.5"
                 }
             ]
         },
@@ -327,15 +332,14 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/gnome-desktop.git",
-                    "commit": "b6112c345181d8e1509c443f97b4f8b7bcc61725",
-                    "tag": "43"
+                    "commit": "97c0344b3ba955bb6f6fe74ca03cc399a81acaa5",
+                    "tag": "44.0"
                 }
             ]
         },
         {
             "name": "totem",
             "buildsystem": "meson",
-            "config-opts": ["-Denable-easy-codec-installation=no"],
             "sources": [
                 {
                     "type": "git",
