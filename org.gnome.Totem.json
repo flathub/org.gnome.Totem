@@ -34,7 +34,6 @@
         /* screensaver plugin */
         "--talk-name=org.gnome.ScreenSaver",
         /* screenshot plugin */
-        "--talk-name=org.gnome.Shell",
         "--filesystem=xdg-pictures",
         /* save-file plugin */
         "--talk-name=org.gnome.Nautilus",
