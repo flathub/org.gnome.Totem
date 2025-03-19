@@ -120,7 +120,7 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/grilo.git",
-                    "commit": "c80ca32b214a3c91ea1aed552d1a3b538c4b58c5"
+                    "commit": "edd5f18aa765a55c0ccd070d8a71bdc01136e112"
                 }
             ],
             "cleanup": [ "/include" ]
@@ -303,7 +303,7 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/grilo-plugins.git",
-                    "commit": "b1a36383f63a895a505ca411d364d5e263bea013"
+                    "commit": "b10fc2ba8db9f2412b23b6ad2d52d808217df68f"
                 }
             ],
             "cleanup": [ "/include" ]
