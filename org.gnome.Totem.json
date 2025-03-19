@@ -126,32 +126,6 @@
             "cleanup": [ "/include" ]
         },
         {
-            "name": "librest",
-            "buildsystem": "meson",
-            "config-opts": [ "-Dgtk_doc=false" ],
-            "sources": [
-                {
-                    "type": "git",
-                    "url": "https://gitlab.gnome.org/GNOME/librest.git",
-                    "commit": "aa9e968e381ede159414c6338da24d61ad0b5d8b",
-                    "tag": "0.9.1"
-                }
-            ]
-        },
-        {
-            "name": "gnome-online-accounts",
-            "buildsystem": "meson",
-            "config-opts": [ "-Dgtk_doc=false", "-Dgoabackend=false", "-Dman=false" ],
-            "sources": [
-                {
-                    "type": "git",
-                    "url": "https://gitlab.gnome.org/GNOME/gnome-online-accounts.git",
-                    "commit": "a0931a8253e09e18768270f97b5e093e9df82fa8",
-                    "tag": "3.36.0"
-                }
-            ]
-        },
-        {
             "name": "liboauth",
             "config-opts": [ "--enable-nss", "--enable-shared", "--disable-static" ],
             "cleanup": [ "/bin/*oauth*", "share/man/man1/*oauth*" ],
@@ -166,7 +140,7 @@
         {
             "name": "libgdata",
             "buildsystem": "meson",
-            "config-opts": [ "-Dalways_build_tests=false", "-Dgtk_doc=false" ],
+            "config-opts": [ "-Dalways_build_tests=false", "-Dgtk_doc=false", "-Dgoa=disabled" ],
             "sources": [
                 {
                     "type": "git",
