@@ -296,14 +296,14 @@
         {
             "name": "gnome-desktop",
             "buildsystem": "meson",
-            "config-opts": ["-Ddebug_tools=true", "-Dudev=disabled"],
+            "config-opts": ["-Ddebug_tools=true", "-Dudev=disabled", "-Dlegacy_library=true", "-Dbuild_gtk4=false"],
             "cleanup": [ "/libexec/gnome-desktop-debug" ],
             "sources": [
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/gnome-desktop.git",
-                    "commit": "b6112c345181d8e1509c443f97b4f8b7bcc61725",
-                    "tag": "43"
+                    "commit": "97c0344b3ba955bb6f6fe74ca03cc399a81acaa5",
+                    "tag": "44.0"
                 }
             ]
         },
