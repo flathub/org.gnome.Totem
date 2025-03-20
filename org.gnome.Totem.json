@@ -120,7 +120,7 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/grilo.git",
-                    "commit": "edd5f18aa765a55c0ccd070d8a71bdc01136e112"
+                    "commit": "71b489888f38474f3018d794556e993f9ba8c2a1"
                 }
             ],
             "cleanup": [ "/include" ]
