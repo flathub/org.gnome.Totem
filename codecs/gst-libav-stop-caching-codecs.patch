@@ -19,11 +19,11 @@ index 0c9353f0c157..c50567b8194c 100644
 +  gst_plugin_add_dependency_simple (plugin, NULL,
 +      "/app/lib/codecs/lib",
 +      /* https://git.ffmpeg.org/gitweb/ffmpeg.git/blob/HEAD:/libavcodec/version_major.h */
-+      "libavcodec.so.59,"
++      "libavcodec.so.61,"
 +      /* https://git.ffmpeg.org/gitweb/ffmpeg.git/blob/HEAD:/libavformat/version_major.h */
-+      "libavformat.so.59,"
++      "libavformat.so.61,"
 +      /* https://git.ffmpeg.org/gitweb/ffmpeg.git/blob/HEAD:/libswscale/version_major.h */
-+      "libswscale.so.6",
++      "libswscale.so.8",
 +      GST_PLUGIN_DEPENDENCY_FLAG_NONE);
 +
    gst_ffmpegaudenc_register (plugin);
