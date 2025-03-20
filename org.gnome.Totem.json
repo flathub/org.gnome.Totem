@@ -170,7 +170,8 @@
             "config-opts" : [
                 "-Ddocs=false",
                 "-Dman=false",
-                "-Dsystemd_user_services=false"
+                "-Dsystemd_user_services=false",
+                "-Dbash_completion=false"
             ],
             "sources": [
                 {
