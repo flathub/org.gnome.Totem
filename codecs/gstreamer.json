@@ -6,7 +6,6 @@
         "-Ddevtools=disabled",
         "-Dges=disabled",
         "-Drtsp_server=disabled",
-        "-Domx=disabled",
         "-Dsharp=disabled",
         "-Dgst-examples=disabled",
         "-Dtests=disabled",
@@ -34,7 +33,7 @@
             "type": "git",
             "disable-submodules": true,
             "url": "https://gitlab.freedesktop.org/gstreamer/gstreamer.git",
-            "commit": "ddb4fbe43149b157efb52b6472313f48308c1dbc"
+            "commit": "d31ce8e5e1aacf8f5e5beabb5c81ce2e4da5c202"
         },
         {
             "type": "patch",
