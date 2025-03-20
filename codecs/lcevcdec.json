@@ -1,0 +1,16 @@
+{
+    "name": "LCEVCdec",
+    "buildsystem": "cmake-ninja",
+    "builddir": true,
+    "sources": [
+        {
+            "type": "git",
+            "url": "https://github.com/v-novaltd/LCEVCdec.git",
+            "tag": "3.3.4"
+        },
+        {
+            "type": "patch",
+            "path": "lcevcdec-uint.patch"
+        }
+    ]
+}

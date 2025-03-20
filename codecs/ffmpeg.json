@@ -20,6 +20,7 @@
         "--enable-gnutls",
         "--enable-libaom",
         "--enable-libdav1d",
+        "--enable-liblcevc-dec",
         "--enable-libfdk-aac",
         "--enable-libmp3lame",
         "--enable-libfontconfig",
