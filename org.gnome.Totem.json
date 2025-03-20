@@ -87,8 +87,8 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/libpeas.git",
-                    "commit": "6b4217e0a5ec451cdbe9380df26d701d8e6bdf88",
-                    "tag": "libpeas-1.26.0"
+                    "commit": "7f245fa5158204621c3469756a951b68a651c4fe",
+                    "tag": "libpeas-1.36.0"
                 }
             ]
         },
