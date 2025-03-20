@@ -1,0 +1,24 @@
+From 6b4af0dacc7fec21ce307c6d48e1af9a80772486 Mon Sep 17 00:00:00 2001
+From: Bastien Nocera <hadess@hadess.net>
+Date: Thu, 20 Mar 2025 13:49:09 +0100
+Subject: [PATCH] Work-around https://github.com/flatpak/flatpak/issues/6163
+
+---
+ libgnome-desktop/gnome-desktop-thumbnail-script.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/libgnome-desktop/gnome-desktop-thumbnail-script.c b/libgnome-desktop/gnome-desktop-thumbnail-script.c
+index bbeddf03939b..92660254e255 100644
+--- a/libgnome-desktop/gnome-desktop-thumbnail-script.c
++++ b/libgnome-desktop/gnome-desktop-thumbnail-script.c
+@@ -694,7 +694,6 @@ add_flatpak (GPtrArray   *array,
+ 
+   add_args (array,
+             "flatpak-spawn",
+-            "--clear-env",
+             "--env=GIO_USE_VFS=local",
+             "--env=LC_ALL=C.UTF-8",
+             NULL);
+-- 
+2.48.1
+
