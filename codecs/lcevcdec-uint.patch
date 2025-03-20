@@ -1,0 +1,46 @@
+From 18a37fcc1b3503d06a2e8516aae1d7deaba21a78 Mon Sep 17 00:00:00 2001
+From: Bastien Nocera <hadess@hadess.net>
+Date: Thu, 20 Mar 2025 12:28:09 +0100
+Subject: [PATCH] Fix cstdint error when building in Flatpak
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Using the GNOME 48 SDK, we get those unknown type errors.
+
+/run/ccache/bin/c++  -I/run/build/LCEVCdec/src/api_utility/include -I/run/build/LCEVCdec/src/api_utility/../api/include -isystem /run/build/LCEVCdec/_flatpak_build/generated -isystem /run/build/LCEVCdec/include -O2 -pipe -g -Wp,-D_FORTIFY_SOURCE=3 -Wp,-D_GLIBCXX_ASSERTIONS -fexceptions -fstack-protector-strong -grecord-gcc-switches -fasynchronous-unwind-tables -fstack-clash-protection -fcf-protection -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -O3 -DNDEBUG -std=gnu++17 -fPIC -mavx -Wall -Wshadow -Wwrite-strings --std=c++17 -MD -MT src/api_utility/CMakeFiles/lcevc_dec_api_utility.dir/src/picture_layout.cpp.o -MF src/api_utility/CMakeFiles/lcevc_dec_api_utility.dir/src/picture_layout.cpp.o.d -o src/api_utility/CMakeFiles/lcevc_dec_api_utility.dir/src/picture_layout.cpp.o -c /run/build/LCEVCdec/src/api_utility/src/picture_layout.cpp
+In file included from /run/build/LCEVCdec/src/api_utility/src/picture_layout.cpp:17:
+/run/build/LCEVCdec/src/api_utility/src/math_utils.h:33:15: error: ‘uint8_t’ does not name a type
+   33 | static inline uint8_t clz(uint32_t n)
+      |               ^~~~~~~
+/run/build/LCEVCdec/src/api_utility/src/math_utils.h:24:1: note: ‘uint8_t’ is defined in header ‘<cstdint>’; this is probably fixable by adding ‘#include <cstdint>’
+   23 | #include <vector>
+  +++ |+#include <cstdint>
+   24 |
+/run/build/LCEVCdec/src/api_utility/src/math_utils.h:49:8: error: ‘uint32_t’ does not name a type
+   49 | inline uint32_t nextPow2(uint32_t n)
+      |        ^~~~~~~~
+/run/build/LCEVCdec/src/api_utility/src/math_utils.h:49:8: note: ‘uint32_t’ is defined in header ‘<cstdint>’; this is probably fixable by adding ‘#include <cstdint>’
+/run/build/LCEVCdec/src/api_utility/src/picture_layout.cpp: In static member function ‘static bool lcevc_dec::utility::PictureLayout::getPaddedStrides(const LCEVC_PictureDesc&, uint32_t*)’:
+/run/build/LCEVCdec/src/api_utility/src/picture_layout.cpp:144:29: error: ‘nextPow2’ was not declared in this scope
+  144 |         rowStrides[plane] = nextPow2(layout.defaultRowStride(plane));
+      |                             ^~~~~~~~
+---
+ src/api_utility/src/math_utils.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/api_utility/src/math_utils.h b/src/api_utility/src/math_utils.h
+index 05f40af7a478..4da32b32aad9 100644
+--- a/src/api_utility/src/math_utils.h
++++ b/src/api_utility/src/math_utils.h
+@@ -18,6 +18,7 @@
+ #define VN_LCEVC_UTILITY_MATH_UTILS_H
+ 
+ #include <algorithm>
++#include <cstdint>
+ #include <string>
+ #include <string_view>
+ #include <vector>
+-- 
+2.48.1
+

@@ -76,6 +76,7 @@
         "codecs/libdvdread.json",
         "codecs/libdvdnav.json",
         "codecs/libass.json",
+        "codecs/lcevcdec.json",
         "codecs/ffmpeg.json",
         "codecs/gstreamer.json",
         "codecs/pipewire.json",
