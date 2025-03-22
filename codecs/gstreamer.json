@@ -20,6 +20,7 @@
         "-Dgst-plugins-bad:vulkan=disabled",
         "-Dgst-plugins-bad:va=enabled",
         "-Dgst-plugins-bad:lcevcdecoder=enabled",
+        "-Dgst-plugins-bad:aja=disabled",
         "-Dugly=enabled",
         "-Dgst-plugins-ugly:mpeg2dec=enabled"
     ],
