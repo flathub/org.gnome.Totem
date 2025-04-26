@@ -72,6 +72,7 @@
         "shared-modules/libsoup/libsoup-2.4.json",
         "codecs/liba52.json",
         "codecs/libmpeg2.json",
+        "codecs/libdv.json",
         "codecs/libdvdcss.json",
         "codecs/libdvdread.json",
         "codecs/libdvdnav.json",
