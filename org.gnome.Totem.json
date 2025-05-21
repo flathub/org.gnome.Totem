@@ -291,7 +291,7 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/grilo-plugins.git",
-                    "commit": "b10fc2ba8db9f2412b23b6ad2d52d808217df68f"
+                    "commit": "ea3afa8c45c654d16413910c58f5c872b41a44c9"
                 }
             ],
             "cleanup": [ "/include" ]
