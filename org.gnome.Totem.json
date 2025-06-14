@@ -69,7 +69,6 @@
     "cleanup": [ "/include", "/share/bash-completion", "/share/doc", "/lib/*.la" ],
     "modules": [
         "shared-modules/lua5.4/lua-5.4.json",
-        "shared-modules/libsoup/libsoup-2.4.json",
         "codecs/liba52.json",
         "codecs/libmpeg2.json",
         "codecs/libdv.json",
@@ -125,7 +124,7 @@
             "name": "librest",
             "buildsystem": "meson",
             "config-opts": [
-                "-Dsoup2=true"
+                "-Dsoup2=false"
             ],
             "sources": [
                 {
@@ -146,7 +145,7 @@
                 "-Denable-gtk-doc=false",
                 "-Denable-grl-net=true",
                 "-Denable-grl-pls=true",
-                "-Dsoup3=false"
+                "-Dsoup3=true"
             ],
             "sources": [
                 {
@@ -156,19 +155,6 @@
                 }
             ],
             "cleanup": [ "/include" ]
-        },
-        {
-            "name": "libgdata",
-            "buildsystem": "meson",
-            "config-opts": [ "-Dalways_build_tests=false", "-Dgtk_doc=false", "-Dgoa=disabled" ],
-            "sources": [
-                {
-                    "type": "git",
-                    "url": "https://gitlab.gnome.org/GNOME/libgdata.git",
-                    "commit": "6fd85102e7dcf7414000264a263465ba5cb894e4",
-                    "tag": "0.17.12"
-                }
-            ]
         },
         {
             "name": "gom",
@@ -280,7 +266,7 @@
             "config-opts": [
                 "-Denable-filesystem=yes",
                 "-Denable-optical-media=yes",
-                "-Denable-youtube=yes",
+                "-Denable-youtube=no",
                 "-Denable-bookmarks=yes",
                 "-Denable-lua-factory=yes",
                 "-Denable-metadata-store=yes",
