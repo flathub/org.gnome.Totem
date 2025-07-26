@@ -333,12 +333,15 @@
         {
             "name": "totem",
             "buildsystem": "meson",
-            "config-opts": ["-Denable-easy-codec-installation=no"],
             "sources": [
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/totem.git",
                     "tag": "43.2"
+                },
+                {
+                    "type": "patch",
+                    "path": "0001-backend-Remove-support-for-installing-codecs-on-dema.patch"
                 }
             ]
         }

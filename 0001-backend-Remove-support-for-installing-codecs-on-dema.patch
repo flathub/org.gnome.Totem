@@ -1,0 +1,833 @@
+From d683f42a8ffff7a72d343d149ac3a2327a31e39a Mon Sep 17 00:00:00 2001
+From: Bastien Nocera <hadess@hadess.net>
+Date: Thu, 29 Jun 2023 18:02:06 +0200
+Subject: [PATCH] backend: Remove support for installing codecs on-demand
+
+The only way to distribute totem we support is through Flathub's
+Flatpak, and this process isn't needed as Flathub ships all the
+necessary codecs.
+
+Seeing as totem didn't have any control over the installation of
+plugins, its UI or workflow, the process was always very dependent on
+end-users having prior knowledge of where to get codecs, or they would
+end up installing only codecs for either audio or video, and wondering
+how this would all work.
+
+See https://lists.fedoraproject.org/archives/list/desktop@lists.fedoraproject.org/thread/LJKQWKTPRCEOBOLVBZ45TQO5POUCGROL/
+
+Closes: #62
+---
+ docs/reference/meson.build                    |   1 -
+ help/C/supported-formats.page                 |  11 +-
+ meson.build                                   |  16 -
+ meson_options.txt                             |   1 -
+ po/POTFILES.in                                |   1 -
+ .../bacon-video-widget-gst-missing-plugins.c  | 456 ------------------
+ .../bacon-video-widget-gst-missing-plugins.h  |  28 --
+ src/backend/bacon-video-widget.c              |  86 +---
+ src/backend/meson.build                       |   1 -
+ src/meson.build                               |   1 -
+ 10 files changed, 11 insertions(+), 591 deletions(-)
+ delete mode 100644 src/backend/bacon-video-widget-gst-missing-plugins.c
+ delete mode 100644 src/backend/bacon-video-widget-gst-missing-plugins.h
+
+diff --git a/docs/reference/meson.build b/docs/reference/meson.build
+index 904e3675eb41..423b2966cc3b 100644
+--- a/docs/reference/meson.build
++++ b/docs/reference/meson.build
+@@ -2,7 +2,6 @@ doc_module = meson.project_name()
+ 
+ private_headers = [
+   'bacon-time-label.h',
+-  'bacon-video-widget-gst-missing-plugins.h',
+   'bacon-video-widget-properties.h',
+   'icon-helpers.h',
+   'screenshot-filename-builder.h',
+diff --git a/help/C/supported-formats.page b/help/C/supported-formats.page
+index 2ca4db34c9b2..1a0b7051231f 100644
+--- a/help/C/supported-formats.page
++++ b/help/C/supported-formats.page
+@@ -23,11 +23,12 @@
+   <title>Cannot play a certain file format</title>
+ 
+   <p>File formats displayed by <app>Videos</app> depend on <sys>GStreamer</sys>
+-  plugins. If certain file formats are not supported, please refer to a support
+-  forum of your distribution to find out which package to install.</p>
++  plugins. The only supported version of <app>Videos</app>, <link href="https://flathub.org/apps/org.gnome.Totem">
++  available on Flathub</link>, should have support for all the more common, and
++  some niche, video and audio formats.</p>
+ 
+-  <note><p>If you try to open a format which is not supported, on many
+-  distributions <app>Videos</app> will display a dialog which will allow you
+-  to search for missing plugins (codecs) and install them.</p></note>
++  <note><p>If you run into any video files that cannot be played in the supported
++  version of <app>Videos</app> available on Flathub, then <link href="https://github.com/flathub/org.gnome.Totem/issues">
++  file a bug against the application</link>, so support for the necessary formats can be added.</p></note>
+ 
+ </page>
+diff --git a/meson.build b/meson.build
+index be5c1970c899..2ef3cafd4dfe 100644
+--- a/meson.build
++++ b/meson.build
+@@ -164,15 +164,6 @@ libgd_dep = libgd.get_variable('libgd_dep')
+ 
+ gir_dep = dependency('gobject-introspection-1.0', version: '>= 0.6.7')
+ 
+-# missing plugins support
+-easy_codec_option = get_option('enable-easy-codec-installation')
+-have_easy_codec = false
+-if easy_codec_option != 'no'
+-  have_easy_codec = true
+-endif
+-config_h.set('ENABLE_MISSING_PLUGIN_INSTALLATION', have_easy_codec,
+-             description: 'Whether we can and want to do installation of missing plugins')
+-
+ # python support
+ have_python = false
+ python_deps = []
+@@ -271,13 +262,6 @@ else
+   message('   ' + str + ' disabled')
+ endif
+ 
+-str = 'Easy codec installation support'
+-if have_easy_codec
+-  message('** ' + str + ' enabled')
+-else
+-  message('   ' + str + ' disabled')
+-endif
+-
+ str = 'Python plugin support'
+ if have_python
+   message('** ' + str + ' enabled')
+diff --git a/meson_options.txt b/meson_options.txt
+index 8e685ba20bb9..451d086a3f74 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -1,5 +1,4 @@
+ option('help', type: 'boolean', value: true, description: 'Build help')
+-option('enable-easy-codec-installation', type: 'combo', choices: ['yes', 'no', 'auto'], value: 'auto', description: 'Whether to enable easy codec installation support for GStreamer')
+ option('enable-python', type: 'combo', choices: ['yes', 'no', 'auto'], value: 'auto', description: 'Enable python support')
+ option('libportal', type: 'feature', value: 'auto', description: 'Build plugins requiring libportal')
+ option('with-plugins', type: 'combo', choices: ['all', 'none', 'auto'], value: 'auto', description: 'Which Totem plugins to compile (default: auto; "all", "none" and "auto" are valid)')
+diff --git a/po/POTFILES.in b/po/POTFILES.in
+index 915273d7be02..c5fda72c17af 100644
+--- a/po/POTFILES.in
++++ b/po/POTFILES.in
+@@ -10,7 +10,6 @@ data/shortcuts.ui
+ data/totem.ui
+ data/uri.ui
+ src/backend/bacon-video-widget.c
+-src/backend/bacon-video-widget-gst-missing-plugins.c
+ src/gst/totem-time-helpers.c
+ src/grilo.ui
+ src/totem.c
+diff --git a/src/backend/bacon-video-widget-gst-missing-plugins.c b/src/backend/bacon-video-widget-gst-missing-plugins.c
+deleted file mode 100644
+index 4e06fa5db041..000000000000
+--- a/src/backend/bacon-video-widget-gst-missing-plugins.c
++++ /dev/null
+@@ -1,456 +0,0 @@
+-/* totem-missing-plugins.c
+-
+-   Copyright (C) 2007 Tim-Philipp Müller <tim centricular net>
+-
+-   The Gnome Library is free software; you can redistribute it and/or
+-   modify it under the terms of the GNU Library General Public License as
+-   published by the Free Software Foundation; either version 2 of the
+-   License, or (at your option) any later version.
+-
+-   The Gnome Library is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+-   Library General Public License for more details.
+-
+-   You should have received a copy of the GNU Library General Public
+-   License along with the Gnome Library; see the file COPYING.LIB.  If not,
+-   write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+-   Boston, MA 02110-1301  USA.
+-
+-   Author: Tim-Philipp Müller <tim centricular net>
+- */
+-
+-#include "config.h"
+-
+-#include "bacon-video-widget-gst-missing-plugins.h"
+-
+-#define GST_USE_UNSTABLE_API 1
+-#include <gst/gst.h> /* for gst_registry_update and functions in bacon_video_widget_gst_missing_plugins_block */
+-
+-#include "bacon-video-widget.h"
+-
+-#include <gst/pbutils/pbutils.h>
+-#include <gst/pbutils/install-plugins.h>
+-
+-#include <gio/gdesktopappinfo.h>
+-#include <glib/gi18n.h>
+-#include <gtk/gtk.h>
+-
+-#include <string.h>
+-
+-GST_DEBUG_CATEGORY_EXTERN (_totem_gst_debug_cat);
+-#define GST_CAT_DEFAULT _totem_gst_debug_cat
+-
+-/* list of blocked detail strings */
+-static GList *blocked_plugins = NULL;
+-
+-typedef struct
+-{
+-	gboolean   playing;
+-	gchar    **descriptions;
+-	gchar    **details;
+-	BaconVideoWidget *bvw;
+-}
+-TotemCodecInstallContext;
+-
+-static gboolean
+-bacon_video_widget_gst_codec_install_plugin_is_blocked (const gchar * detail)
+-{
+-	GList *res;
+-
+-	res = g_list_find_custom (blocked_plugins,
+-	                          detail,
+-	                          (GCompareFunc) strcmp);
+-
+-	return (res != NULL);
+-}
+-
+-static void
+-bacon_video_widget_gst_codec_install_block_plugin (const gchar * detail)
+-{
+-	if (!bacon_video_widget_gst_codec_install_plugin_is_blocked (detail))
+-	{
+-		blocked_plugins = g_list_prepend (blocked_plugins,
+-		                                      g_strdup (detail));
+-	}
+-}
+-
+-static void
+-bacon_video_widget_gst_codec_install_context_free (TotemCodecInstallContext *ctx)
+-{
+-	g_strfreev (ctx->descriptions);
+-	g_strfreev (ctx->details);
+-	g_free (ctx);
+-}
+-
+-static void
+-on_plugin_installation_done (GstInstallPluginsReturn res, gpointer user_data)
+-{
+-	TotemCodecInstallContext *ctx = (TotemCodecInstallContext *) user_data;
+-	gchar **p;
+-
+-	GST_INFO ("res = %d (%s)", res, gst_install_plugins_return_get_name (res));
+-
+-	switch (res)
+-	{
+-		/* treat partial success the same as success; in the worst case we'll
+-		 * just do another round and get NOT_FOUND as result that time */
+-		case GST_INSTALL_PLUGINS_PARTIAL_SUCCESS:
+-		case GST_INSTALL_PLUGINS_SUCCESS:
+-			{
+-				/* block installed plugins too, so that we don't get
+-				 * into endless installer loops in case of inconsistencies */
+-				for (p = ctx->details; p != NULL && *p != NULL; ++p)
+-					bacon_video_widget_gst_codec_install_block_plugin (*p);
+-
+-				bacon_video_widget_stop (ctx->bvw);
+-				g_message ("Missing plugins installed. Updating plugin registry ...");
+-
+-				/* force GStreamer to re-read its plugin registry */
+-				if (gst_update_registry ())
+-				{
+-					g_message ("Plugin registry updated, trying again.");
+-					bacon_video_widget_play (ctx->bvw, NULL);
+-				} else {
+-					g_warning ("GStreamer registry update failed");
+-					/* FIXME: should we show an error message here? */
+-				}
+-			}
+-			break;
+-		case GST_INSTALL_PLUGINS_NOT_FOUND:
+-			{
+-				g_message ("No installation candidate for missing plugins found.");
+-
+-				/* NOT_FOUND should only be returned if not a single one of the
+-				 * requested plugins was found; if we managed to play something
+-				 * anyway, we should just continue playing what we have and
+-				 * block the requested plugins for this session; if we
+-				 * could not play anything we should block them as well,
+-				 * so the install wizard isn't called again for nothing */
+-				for (p = ctx->details; p != NULL && *p != NULL; ++p)
+-					bacon_video_widget_gst_codec_install_block_plugin (*p);
+-
+-				if (ctx->playing)
+-				{
+-					bacon_video_widget_play (ctx->bvw, NULL);
+-				} else {
+-					/* wizard has not shown error, do stop/play again,
+-					 * so that an error message gets shown */
+-					bacon_video_widget_stop (ctx->bvw);
+-					bacon_video_widget_play (ctx->bvw, NULL);
+-				}
+-			}
+-			break;
+-		case GST_INSTALL_PLUGINS_USER_ABORT:
+-			{
+-				/* block on user abort, so we show an error next time (or
+-				 * just play what we can) instead of calling the installer */
+-				for (p = ctx->details; p != NULL && *p != NULL; ++p)
+-					bacon_video_widget_gst_codec_install_block_plugin (*p);
+-
+-				if (ctx->playing) {
+-					bacon_video_widget_play (ctx->bvw, NULL);
+-				} else {
+-					/* if we couldn't play anything, do stop/play again,
+-					 * so that an error message gets shown */
+-					bacon_video_widget_stop (ctx->bvw);
+-					bacon_video_widget_play (ctx->bvw, NULL);
+-				}
+-			}
+-			break;
+-		case GST_INSTALL_PLUGINS_INVALID:
+-		case GST_INSTALL_PLUGINS_ERROR:
+-		case GST_INSTALL_PLUGINS_CRASHED:
+-		default:
+-			{
+-				g_message ("Missing plugin installation failed: %s",
+-				           gst_install_plugins_return_get_name (res));
+-
+-				if (ctx->playing)
+-					bacon_video_widget_play (ctx->bvw, NULL);
+-				else
+-					bacon_video_widget_stop (ctx->bvw);
+-				break;
+-			}
+-		case GST_INSTALL_PLUGINS_STARTED_OK:
+-		case GST_INSTALL_PLUGINS_INTERNAL_FAILURE:
+-		case GST_INSTALL_PLUGINS_HELPER_MISSING:
+-		case GST_INSTALL_PLUGINS_INSTALL_IN_PROGRESS:
+-			{
+-				g_assert_not_reached ();
+-				break;
+-			}
+-	}
+-
+-	bacon_video_widget_gst_codec_install_context_free (ctx);
+-}
+-
+-static void
+-set_startup_notification_id (GstInstallPluginsContext *install_ctx)
+-{
+-	gchar *startup_id;
+-	guint32 timestamp;
+-
+-	timestamp = gtk_get_current_event_time ();
+-	startup_id = g_strdup_printf ("_TIME%u", timestamp);
+-	gst_install_plugins_context_set_startup_notification_id (install_ctx, startup_id);
+-	g_free (startup_id);
+-}
+-
+-static gboolean
+-bacon_video_widget_start_plugin_installation (TotemCodecInstallContext *ctx,
+-                                              gboolean                  confirm_search)
+-{
+-	GstInstallPluginsContext *install_ctx;
+-	GstInstallPluginsReturn status;
+-
+-	install_ctx = gst_install_plugins_context_new ();
+-	gst_install_plugins_context_set_desktop_id (install_ctx, "org.gnome.Totem.desktop");
+-	gst_install_plugins_context_set_confirm_search (install_ctx, confirm_search);
+-	set_startup_notification_id (install_ctx);
+-
+-	status = gst_install_plugins_async ((const char * const*) ctx->details, install_ctx,
+-	                                    on_plugin_installation_done,
+-	                                    ctx);
+-
+-	gst_install_plugins_context_free (install_ctx);
+-
+-	GST_INFO ("gst_install_plugins_async() result = %d", status);
+-
+-	if (status != GST_INSTALL_PLUGINS_STARTED_OK)
+-	{
+-		if (status == GST_INSTALL_PLUGINS_HELPER_MISSING)
+-		{
+-			g_message ("Automatic missing codec installation not supported "
+-			           "(helper script missing)");
+-		} else {
+-			g_warning ("Failed to start codec installation: %s",
+-			           gst_install_plugins_return_get_name (status));
+-		}
+-		bacon_video_widget_gst_codec_install_context_free (ctx);
+-		return FALSE;
+-	}
+-
+-	return TRUE;
+-}
+-
+-static void
+-codec_confirmation_dialog_response_cb (GtkDialog       *dialog,
+-                                       GtkResponseType  response_type,
+-                                       gpointer         user_data)
+-{
+-	TotemCodecInstallContext *ctx = user_data;
+-
+-	switch (response_type) {
+-	case GTK_RESPONSE_ACCEPT:
+-		bacon_video_widget_start_plugin_installation (ctx, FALSE);
+-		break;
+-	case GTK_RESPONSE_CANCEL:
+-	case GTK_RESPONSE_DELETE_EVENT:
+-		break;
+-	default:
+-		g_assert_not_reached ();
+-	}
+-	gtk_widget_destroy (GTK_WIDGET (dialog));
+-}
+-
+-static void
+-show_codec_confirmation_dialog (TotemCodecInstallContext *ctx,
+-                                const gchar              *install_helper_display_name)
+-{
+-	GtkWidget *button;
+-	GtkWidget *dialog;
+-	GtkWidget *toplevel;
+-	gchar *button_text;
+-	gchar *descriptions_text;
+-	gchar *message_text;
+-
+-	toplevel = gtk_widget_get_toplevel (GTK_WIDGET (ctx->bvw));
+-
+-	dialog = gtk_message_dialog_new (GTK_WINDOW (toplevel),
+-	                                 GTK_DIALOG_MODAL |
+-	                                 GTK_DIALOG_DESTROY_WITH_PARENT,
+-	                                 GTK_MESSAGE_ERROR,
+-	                                 GTK_BUTTONS_CANCEL,
+-	                                 _("Unable to play the file"));
+-
+-	descriptions_text = g_strjoinv (", ", ctx->descriptions);
+-	message_text = g_strdup_printf (ngettext ("%s is required to play the file, but is not installed.",
+-	                                          "%s are required to play the file, but are not installed.",
+-	                                          g_strv_length (ctx->descriptions)),
+-	                                descriptions_text);
+-
+-	/* TRANSLATORS: this is a button to launch a codec installer.
+-	 * %s will be replaced with the software installer's name, e.g.
+-	 * 'Software' in case of gnome-software. */
+-	button_text = g_strdup_printf (_("_Find in %s"), install_helper_display_name);
+-	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog), "%s", message_text);
+-	button = gtk_dialog_add_button (GTK_DIALOG (dialog),
+-	                                button_text,
+-	                                GTK_RESPONSE_ACCEPT);
+-	gtk_dialog_set_default_response (GTK_DIALOG (dialog), GTK_RESPONSE_ACCEPT);
+-	gtk_style_context_add_class (gtk_widget_get_style_context (button), "suggested-action");
+-	g_signal_connect (dialog, "response",
+-	                  G_CALLBACK (codec_confirmation_dialog_response_cb),
+-	                  ctx);
+-
+-	gtk_window_present (GTK_WINDOW (dialog));
+-
+-	g_free (button_text);
+-	g_free (descriptions_text);
+-	g_free (message_text);
+-}
+-
+-static void
+-on_packagekit_proxy_ready (GObject      *source_object,
+-                           GAsyncResult *res,
+-                           gpointer      user_data)
+-{
+-	TotemCodecInstallContext *ctx = (TotemCodecInstallContext *) user_data;
+-	GDBusProxy *packagekit_proxy = NULL;
+-	GVariant *property = NULL;
+-	GError *error = NULL;
+-
+-	packagekit_proxy = g_dbus_proxy_new_for_bus_finish (res, &error);
+-	if (packagekit_proxy == NULL &&
+-	    g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
+-		goto out;
+-	}
+-
+-	if (packagekit_proxy != NULL) {
+-		property = g_dbus_proxy_get_cached_property (packagekit_proxy, "DisplayName");
+-		if (property != NULL) {
+-			const gchar *display_name;
+-
+-			display_name = g_variant_get_string (property, NULL);
+-			if (display_name != NULL && display_name[0] != '\0') {
+-				show_codec_confirmation_dialog (ctx, display_name);
+-				goto out;
+-			}
+-		}
+-	}
+-
+-	/* If the above failed, fall back to immediately starting the codec installation */
+-	bacon_video_widget_start_plugin_installation (ctx, TRUE);
+-
+-out:
+-	g_clear_error (&error);
+-	g_clear_pointer (&property, g_variant_unref);
+-	g_clear_object (&packagekit_proxy);
+-}
+-
+-static gboolean
+-bacon_video_widget_gst_on_missing_plugins_event (BaconVideoWidget  *bvw,
+-                                                 char             **details,
+-                                                 char             **descriptions,
+-                                                 gboolean           playing,
+-                                                 gpointer           user_data)
+-{
+-	TotemCodecInstallContext *ctx;
+-	guint i, num;
+-
+-	num = g_strv_length (details);
+-	g_return_val_if_fail (num > 0 && g_strv_length (descriptions) == num, FALSE);
+-
+-	ctx = g_new0 (TotemCodecInstallContext, 1);
+-	ctx->descriptions = g_strdupv (descriptions);
+-	ctx->details = g_strdupv (details);
+-	ctx->playing = playing;
+-	ctx->bvw = bvw;
+-
+-	for (i = 0; i < num; ++i)
+-	{
+-		if (bacon_video_widget_gst_codec_install_plugin_is_blocked (ctx->details[i]))
+-		{
+-			g_message ("Missing plugin: %s (ignoring)", ctx->details[i]);
+-			g_free (ctx->details[i]);
+-			g_free (ctx->descriptions[i]);
+-			ctx->details[i] = ctx->details[num-1];
+-			ctx->descriptions[i] = ctx->descriptions[num-1];
+-			ctx->details[num-1] = NULL;
+-			ctx->descriptions[num-1] = NULL;
+-			--num;
+-			--i;
+-		} else {
+-			g_message ("Missing plugin: %s (%s)", ctx->details[i], ctx->descriptions[i]);
+-		}
+-	}
+-
+-	if (num == 0)
+-	{
+-		g_message ("All missing plugins are blocked, doing nothing");
+-		bacon_video_widget_gst_codec_install_context_free (ctx);
+-		return FALSE;
+-	}
+-
+-#ifdef ENABLE_MISSING_PLUGIN_INSTALLATION
+-	/* Get the PackageKit session interface proxy and continue with the
+-	 * codec installation in the callback */
+-	g_dbus_proxy_new_for_bus (G_BUS_TYPE_SESSION,
+-	                          G_DBUS_PROXY_FLAGS_NONE,
+-	                          NULL, /* g-interface-info */
+-	                          "org.freedesktop.PackageKit",
+-	                          "/org/freedesktop/PackageKit",
+-	                          "org.freedesktop.PackageKit.Modify2",
+-	                          g_object_get_data (G_OBJECT (bvw), "missing-plugins-cancellable"),
+-	                          on_packagekit_proxy_ready,
+-	                          ctx);
+-#else /* ENABLE_MISSING_PLUGIN_INSTALLATION */
+-	bacon_video_widget_gst_codec_install_context_free (ctx);
+-#endif
+-
+-	/* if we managed to start playing, pause playback, since some install
+-	 * wizard should now take over in a second anyway and the user might not
+-	 * be able to use totem's controls while the wizard is running */
+-	if (playing)
+-		bacon_video_widget_pause (bvw);
+-
+-	return TRUE;
+-}
+-
+-void
+-bacon_video_widget_gst_missing_plugins_setup (BaconVideoWidget *bvw)
+-{
+-	g_signal_connect (G_OBJECT (bvw),
+-			"missing-plugins",
+-			G_CALLBACK (bacon_video_widget_gst_on_missing_plugins_event),
+-			bvw);
+-
+-	gst_pb_utils_init ();
+-
+-	GST_INFO ("Set up support for automatic missing plugin installation");
+-}
+-
+-void
+-bacon_video_widget_gst_missing_plugins_block (void)
+-{
+-	struct {
+-		const char *name;
+-		gboolean remove;
+-	} blocked_elements[] = {
+-		{ "ffdemux_flv", 0 },
+-		{ "avdemux_flv", 0 },
+-		{ "dvdreadsrc" , 1 }
+-	};
+-	GstRegistry *registry;
+-	guint i;
+-
+-	registry = gst_registry_get ();
+-
+-	for (i = 0; i < G_N_ELEMENTS (blocked_elements); ++i) {
+-		GstPluginFeature *feature;
+-
+-		feature = gst_registry_find_feature (registry,
+-						     blocked_elements[i].name,
+-						     GST_TYPE_ELEMENT_FACTORY);
+-
+-		if (!feature)
+-			continue;
+-
+-		if (blocked_elements[i].remove)
+-			gst_registry_remove_feature (registry, feature);
+-		else
+-			gst_plugin_feature_set_rank (feature, GST_RANK_NONE);
+-	}
+-}
+-
+diff --git a/src/backend/bacon-video-widget-gst-missing-plugins.h b/src/backend/bacon-video-widget-gst-missing-plugins.h
+deleted file mode 100644
+index 38d9aa78bcbc..000000000000
+--- a/src/backend/bacon-video-widget-gst-missing-plugins.h
++++ /dev/null
+@@ -1,28 +0,0 @@
+-/* bacon-video-widget-gst-missing-plugins.h
+-
+-   Copyright (C) 2007 Tim-Philipp Müller <tim centricular net>
+-
+-   The Gnome Library is free software; you can redistribute it and/or
+-   modify it under the terms of the GNU Library General Public License as
+-   published by the Free Software Foundation; either version 2 of the
+-   License, or (at your option) any later version.
+-
+-   The Gnome Library is distributed in the hope that it will be useful,
+-   but WITHOUT ANY WARRANTY; without even the implied warranty of
+-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+-   Library General Public License for more details.
+-
+-   You should have received a copy of the GNU Library General Public
+-   License along with the Gnome Library; see the file COPYING.LIB.  If not,
+-   write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+-   Boston, MA 02110-1301  USA.
+-
+-   Author: Tim-Philipp Müller <tim centricular net>
+- */
+-
+-#pragma once
+-
+-#include "bacon-video-widget.h"
+-
+-void bacon_video_widget_gst_missing_plugins_setup (BaconVideoWidget *bvw);
+-void bacon_video_widget_gst_missing_plugins_block (void);
+diff --git a/src/backend/bacon-video-widget.c b/src/backend/bacon-video-widget.c
+index 2624f4ac87d6..15b5930f6f4a 100644
+--- a/src/backend/bacon-video-widget.c
++++ b/src/backend/bacon-video-widget.c
+@@ -59,7 +59,6 @@
+ #include "totem-gst-helpers.h"
+ #include "totem-gst-pixbuf-helpers.h"
+ #include "bacon-video-widget.h"
+-#include "bacon-video-widget-gst-missing-plugins.h"
+ #include "bacon-video-widget-enums.h"
+ #include "bacon-video-widget-resources.h"
+ 
+@@ -231,10 +230,8 @@ struct _BaconVideoWidget
+    * to reach 100% fill-level" */
+   gint64                       buffering_left;
+ 
+-  /* for easy codec installation */
++  /* for missing codecs handling */
+   GList                       *missing_plugins;   /* GList of GstMessages */
+-  gboolean                     plugin_install_in_progress;
+-  GCancellable                *missing_plugins_cancellable;
+ 
+   /* for mounting locations if necessary */
+   GCancellable                *mount_cancellable;
+@@ -312,13 +309,6 @@ bvw_get_missing_plugins_foo (const GList * missing_plugins, MsgToStrFunc func)
+   return (gchar **) g_ptr_array_free (arr, FALSE);
+ }
+ 
+-static gchar **
+-bvw_get_missing_plugins_details (const GList * missing_plugins)
+-{
+-  return bvw_get_missing_plugins_foo (missing_plugins,
+-      gst_missing_plugin_message_get_installer_detail);
+-}
+-
+ static gchar **
+ bvw_get_missing_plugins_descriptions (const GList * missing_plugins)
+ {
+@@ -421,11 +411,6 @@ bacon_video_widget_realize (GtkWidget * widget)
+   bvw->parent_toplevel = GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (bvw)));
+   g_signal_connect_swapped (G_OBJECT (bvw->parent_toplevel), "notify::is-active",
+ 			    G_CALLBACK (update_cursor), bvw);
+-
+-  bvw->missing_plugins_cancellable = g_cancellable_new ();
+-  g_object_set_data_full (G_OBJECT (bvw), "missing-plugins-cancellable",
+-			  bvw->missing_plugins_cancellable, g_object_unref);
+-  bacon_video_widget_gst_missing_plugins_setup (bvw);
+ }
+ 
+ static void
+@@ -441,10 +426,6 @@ bacon_video_widget_unrealize (GtkWidget *widget)
+   }
+   g_clear_object (&bvw->blank_cursor);
+   g_clear_object (&bvw->hand_cursor);
+-
+-  g_cancellable_cancel (bvw->missing_plugins_cancellable);
+-  bvw->missing_plugins_cancellable = NULL;
+-  g_object_set_data (G_OBJECT (bvw), "missing-plugins-cancellable", NULL);
+ }
+ 
+ static void
+@@ -1306,36 +1287,6 @@ bvw_reconfigure_fill_timeout (BaconVideoWidget *bvw, guint msecs)
+   }
+ }
+ 
+-/* returns TRUE if the error/signal has been handled and should be ignored */
+-static gboolean
+-bvw_emit_missing_plugins_signal (BaconVideoWidget * bvw, gboolean prerolled)
+-{
+-  gboolean handled = FALSE;
+-  gchar **descriptions, **details;
+-
+-  details = bvw_get_missing_plugins_details (bvw->missing_plugins);
+-  descriptions = bvw_get_missing_plugins_descriptions (bvw->missing_plugins);
+-
+-  GST_LOG ("emitting missing-plugins signal (prerolled=%d)", prerolled);
+-
+-  g_signal_emit (bvw, bvw_signals[SIGNAL_MISSING_PLUGINS], 0,
+-      details, descriptions, prerolled, &handled);
+-  GST_DEBUG ("missing-plugins signal was %shandled", (handled) ? "" : "not ");
+-
+-  g_strfreev (descriptions);
+-  g_strfreev (details);
+-
+-  if (handled) {
+-    bvw->plugin_install_in_progress = TRUE;
+-    bvw_clear_missing_plugins_messages (bvw);
+-  }
+-
+-  /* if it wasn't handled, we might need the list of missing messages again
+-   * later to create a proper error message with details of what's missing */
+-
+-  return handled;
+-}
+-
+ static void
+ bvw_auth_reply_cb (GMountOperation      *op,
+ 		   GMountOperationResult result,
+@@ -1449,7 +1400,6 @@ static gboolean
+ bvw_check_missing_plugins_error (BaconVideoWidget * bvw, GstMessage * err_msg)
+ {
+   gboolean error_src_is_playbin;
+-  gboolean ret = FALSE;
+   GError *err = NULL;
+ 
+   if (bvw->missing_plugins == NULL) {
+@@ -1471,18 +1421,12 @@ bvw_check_missing_plugins_error (BaconVideoWidget * bvw, GstMessage * err_msg)
+       (is_error (err, STREAM, WRONG_TYPE) && error_src_is_playbin)) {
+     bvw_check_if_video_decoder_is_missing (bvw);
+     set_current_actor (bvw);
+-    ret = bvw_emit_missing_plugins_signal (bvw, FALSE);
+-    if (ret) {
+-      /* If it was handled, stop playback to make sure we're not processing any
+-       * other error messages that might also be on the bus */
+-      bacon_video_widget_stop (bvw);
+-    }
+   } else {
+     GST_DEBUG ("not an error code we are looking for, doing nothing");
+   }
+ 
+   g_error_free (err);
+-  return ret;
++  return FALSE;
+ }
+ 
+ static gboolean
+@@ -1514,18 +1458,6 @@ bvw_check_mpeg_eos (BaconVideoWidget *bvw, GstMessage *err_msg)
+   return ret;
+ }
+ 
+-/* returns TRUE if the error/signal has been handled and should be ignored */
+-static gboolean
+-bvw_check_missing_plugins_on_preroll (BaconVideoWidget * bvw)
+-{
+-  if (bvw->missing_plugins == NULL) {
+-    GST_DEBUG ("no missing-plugin messages");
+-    return FALSE;
+-  }
+-
+-  return bvw_emit_missing_plugins_signal (bvw, TRUE); 
+-}
+-
+ static void
+ bvw_update_tags (BaconVideoWidget * bvw, GstTagList *tag_list, const gchar *type)
+ {
+@@ -1920,10 +1852,8 @@ bvw_bus_message_cb (GstBus * bus, GstMessage * message, BaconVideoWidget *bvw)
+             "totem-prerolled");
+ 	bacon_video_widget_get_stream_length (bvw);
+         bvw_update_stream_info (bvw);
+-        if (!bvw_check_missing_plugins_on_preroll (bvw)) {
+-          /* show a non-fatal warning message if we can't decode the video */
+-          bvw_show_error_if_video_decoder_is_missing (bvw);
+-        }
++        /* show a non-fatal warning message if we can't decode the video */
++        bvw_show_error_if_video_decoder_is_missing (bvw);
+ 	/* Now that we have the length, check whether we wanted
+ 	 * to pause or to stop the pipeline */
+         if (bvw->target_state == GST_STATE_PAUSED)
+@@ -3634,10 +3564,7 @@ bacon_video_widget_play (BaconVideoWidget * bvw, GError ** error)
+   }
+ 
+   /* just lie and do nothing in this case */
+-  if (bvw->plugin_install_in_progress && cur_state != GST_STATE_PAUSED) {
+-    GST_DEBUG ("plugin install in progress and nothing to play, not playing");
+-    return TRUE;
+-  } else if (bvw->mount_in_progress) {
++  if (bvw->mount_in_progress) {
+     GST_DEBUG ("Mounting in progress, not playing");
+     return TRUE;
+   } else if (bvw->auth_dialog != NULL) {
+@@ -3858,7 +3785,6 @@ bvw_stop_play_pipeline (BaconVideoWidget * bvw)
+   bvw->target_state = GST_STATE_READY;
+ 
+   bvw->buffering = FALSE;
+-  bvw->plugin_install_in_progress = FALSE;
+   bvw->download_buffering = FALSE;
+   g_clear_pointer (&bvw->download_filename, g_free);
+   bvw->buffering_left = -1;
+@@ -5496,8 +5422,6 @@ bacon_video_widget_init (BaconVideoWidget *bvw)
+   bvw->seek_time = -1;
+   bvw->auth_last_result = G_MOUNT_OPERATION_HANDLED;
+ 
+-  bacon_video_widget_gst_missing_plugins_block ();
+-
+ #ifndef GST_DISABLE_GST_DEBUG
+   if (_totem_gst_debug_cat == NULL) {
+     GST_DEBUG_CATEGORY_INIT (_totem_gst_debug_cat, "totem", 0,
+diff --git a/src/backend/meson.build b/src/backend/meson.build
+index 2ac155636574..7bda77c8fd04 100644
+--- a/src/backend/meson.build
++++ b/src/backend/meson.build
+@@ -35,7 +35,6 @@ endforeach
+ 
+ sources = files(
+   'bacon-time-label.c',
+-  'bacon-video-widget-gst-missing-plugins.c',
+   'bacon-video-widget.c',
+ )
+ 
+diff --git a/src/meson.build b/src/meson.build
+index 98a3b1ff8501..740b34f477a5 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -6,7 +6,6 @@ subdir('backend')
+ 
+ enum_headers = files(
+   'backend/bacon-time-label.h',
+-  'backend/bacon-video-widget-gst-missing-plugins.h',
+   'backend/bacon-video-widget.h',
+   'icon-helpers.h',
+   'totem-grilo.h',
+-- 
+2.50.0
+
