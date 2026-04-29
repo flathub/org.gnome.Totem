@@ -207,7 +207,12 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/tracker-miners.git",
-                    "tag": "3.4.1"
+                    "tag": "3.4.3",
+                    "commit": "83054c8c145f12c83289e6c424f55b87a5b609d9"
+                },
+                {
+                    "type": "patch",
+                    "path": "tracker-gcc-15.patch"
                 }
             ]
         },

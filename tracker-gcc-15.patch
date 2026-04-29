@@ -1,0 +1,55 @@
+From 9a19e8326bb018aca0d30055909a8bcc4bb20d57 Mon Sep 17 00:00:00 2001
+From: Carlos Garnacho <carlosg@gnome.org>
+Date: Fri, 17 Jan 2025 08:52:17 +0100
+Subject: [PATCH 1/2] tests: Use full signature in function definition
+
+Somehow, gcc >=15 decides that we no longer can use unspecified
+arguments.
+---
+ tests/functional-tests/mockvolumemonitor/mock-drive.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tests/functional-tests/mockvolumemonitor/mock-drive.c b/tests/functional-tests/mockvolumemonitor/mock-drive.c
+index f7ab8c08c..81c2a698d 100644
+--- a/tests/functional-tests/mockvolumemonitor/mock-drive.c
++++ b/tests/functional-tests/mockvolumemonitor/mock-drive.c
+@@ -34,7 +34,7 @@ struct _MockDrive
+ 	const gchar *name;
+ };
+ 
+-static void mock_drive_drive_iface_init ();
++static void mock_drive_drive_iface_init (GDriveIface *iface);
+ 
+ G_DEFINE_TYPE_EXTENDED (MockDrive, mock_drive, G_TYPE_OBJECT, 0,
+ 	                      G_IMPLEMENT_INTERFACE (G_TYPE_DRIVE, mock_drive_drive_iface_init))
+-- 
+GitLab
+
+
+From c9d3679d9060b9afd8ab54d3c3cda462e5b0d49b Mon Sep 17 00:00:00 2001
+From: Carlos Garnacho <carlosg@gnome.org>
+Date: Fri, 17 Jan 2025 08:54:39 +0100
+Subject: [PATCH 2/2] common: Cast function argument to expected type
+
+Somehow, gcc >=15 now expects the exact signature for a GThreadFunc
+in g_once().
+---
+ src/libtracker-miners-common/tracker-debug.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/libtracker-miners-common/tracker-debug.c b/src/libtracker-miners-common/tracker-debug.c
+index 1e911f171..58d0e3fb9 100644
+--- a/src/libtracker-miners-common/tracker-debug.c
++++ b/src/libtracker-miners-common/tracker-debug.c
+@@ -60,7 +60,7 @@ tracker_miners_get_debug_flags (void)
+ {
+ 	static GOnce once = G_ONCE_INIT;
+ 
+-	g_once (&once, parse_debug_flags, NULL);
++	g_once (&once, (GThreadFunc) parse_debug_flags, NULL);
+ 
+ 	return GPOINTER_TO_INT (once.retval);
+ }
+-- 
+GitLab
+
