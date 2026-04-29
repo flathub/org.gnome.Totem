@@ -51,8 +51,8 @@
             "type": "git",
             "url": "https://git.ffmpeg.org/ffmpeg.git",
             /* Don't forget to update gst-libav-stop-caching-codecs.patch */
-            "tag": "n8.0",
-            "commit": "a4044e04486d1136022498891088a90baf5b2775"
+            "tag": "n8.1",
+            "commit": "a65b3bfe9dacc3b20597ef199d0afdd8bc8128e2"
         }
     ]
 }
