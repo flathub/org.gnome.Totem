@@ -184,7 +184,8 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/tracker.git",
-                    "tag": "3.4.1"
+                    "tag": "3.4.2",
+                    "commit": "0de82e325639c567353ca68ccc421d12e5f1de86"
                 }
             ]
         },
