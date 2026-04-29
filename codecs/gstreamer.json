@@ -15,7 +15,6 @@
         "-Dgpl=enabled",
         "-Dlibav=enabled",
         "-Dbad=enabled",
-        "-Dvaapi=disabled",
         "-Dgst-plugins-good:dv=enabled",
         "-Dgst-plugins-bad:openh264=disabled",
         "-Dgst-plugins-bad:vulkan=disabled",
@@ -36,7 +35,8 @@
             "type": "git",
             "disable-submodules": true,
             "url": "https://gitlab.freedesktop.org/gstreamer/gstreamer.git",
-            "commit": "d31ce8e5e1aacf8f5e5beabb5c81ce2e4da5c202"
+            "tag": "1.28.2",
+            "commit": "43421c2a5b8ac5cceb52b11749df40301e1de5c0"
         },
         {
             "type": "patch",
