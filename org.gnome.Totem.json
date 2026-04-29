@@ -339,7 +339,8 @@
                 {
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/totem.git",
-                    "tag": "43.2"
+                    "tag": "43.2",
+                    "commit": "99815d21c254d2b90b1d1cedbc9a48c76a90419a"
                 },
                 {
                     "type": "patch",
