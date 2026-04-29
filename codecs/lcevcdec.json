@@ -6,11 +6,8 @@
         {
             "type": "git",
             "url": "https://github.com/v-novaltd/LCEVCdec.git",
-            "tag": "3.3.4"
-        },
-        {
-            "type": "patch",
-            "path": "lcevcdec-uint.patch"
+            "tag": "4.0.5",
+            "commit": "655f029d0008f00da9c976567ea159437aa86a36"
         }
     ]
 }
