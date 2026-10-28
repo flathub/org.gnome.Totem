@@ -10,7 +10,6 @@
         /* Wayland access */
         "--socket=wayland",
         /* OpenGL access */
-        "--device=dri",
         /* DVD playback */
         "--device=all",
         /* Needs to talk to the network: */
